@@ -1,0 +1,5 @@
+name = My Ajax
+description = Display full content of articles via Ajax.
+package = Custom Modules
+core = 7.x
+files[] = my_ajax.module
