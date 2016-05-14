@@ -21,6 +21,7 @@ function dna_form() {
         '#title' => 'Enter in a DNA sequence and generate its helix counterpart.',
         '#type' => 'textfield',
         '#description' => t("Please enter a string of letters in any order, however they must only be the letters 'a', 'c', 'g' or 't'."),
+        '#element_validate' => array('element_validate_letter'),
         '#required' => TRUE,
     );
     $form['submit'] = array(
@@ -30,16 +31,32 @@ function dna_form() {
     return $form;
 }
 
+function element_validate_letter($element) {
+    $upper_input = strtoupper($element['#value']);
+    $split_input = str_split($upper_input);
+
+    $letters = array('A', 'C', 'G', 'T');
+
+    foreach($split_input as $letter) {
+        if(!in_array($letter, $letters)) {
+            form_set_error($upper_input, t("Please only enter the letters 'A', 'C', 'G', or 'T'."));
+        }
+    }
+}
+
 function dna_form_submit($form, &$form_state) {
-
     $input = $form_state['values']['input'];
+    $result = dna_generate($input);
+    $_SESSION['result'] = $result;
+    $form_state['redirect'] = 'dna_results_page';
+}
 
+function dna_generate($input) {
     $upper_input = strtoupper($input);
     $split_input = str_split($upper_input);
 
-    // $dna_letters = array('A', 'C', 'G', 'T');
-
     $result = '';
+    $final = '';
 
     foreach($split_input as $letter) {
         if($letter === 'A') {
@@ -51,9 +68,8 @@ function dna_form_submit($form, &$form_state) {
         } else {
             $result .= 'G';
         }
-        $_SESSION['result'] = $result;
-        $form_state['redirect'] = 'dna_results_page';
-    }
+    }   $final .= 'Helix 1: ' . $upper_input . ' <br/>Helix 2: ' . $result;
+        return $final;
 }
 
 function dna_results() {

@@ -1,36 +1,37 @@
 <?php
-class DNATest extends DrupalUnitTestCase
+class DNATestCase extends DrupalUnitTestCase
 {
     public static function getInfo()
     {
         return array(
         'name' => 'DNA Test unit tests',
-        'description' => 'Test that dna_validation works properly.',
+        'description' => 'Test that dna module works properly.',
         'group' => 'Custom Modules Tests',
         );
     }
 
-    function testValidation()
+    function testDNA()
     {
-        $description = 'Letters other than a, c, g, or t should return FALSE.';
+        $description = 'Letters should be capitalized, converted to corresponding letter.';
 
         //Arrange
-        $input = 'z';
+        $input = 'a';
 
         //Act
-        $result = dna_validation($input);
+        $result = dna_generate($input);
 
         //Assert
+        $expected_output = 'T';
+        $this->assertEqual($result, $expected_output, $description);
+
+        $description = 'Letters other than a, c, g and t will return an error.';
+        $input = 'z';
+        $result = element_validate_letter($input);
         $this->assertFalse($result, $description);
 
-        $description = 'A NULL value should return FALSE.';
-        $input = NULL;
-        $result = dna_validation($input);
-        $this->assertFalse($result, $description);
-
-        $description = 'Letters a, c, g, or t should return TRUE.';
-        $input = 'a';
-        $result = dna_validation($input);
-        $this->assertTrue($result, $description);
+        // $description = 'Letters a, c, g, or t should return TRUE.';
+        // $input = 'a';
+        // $result = element_validate_letter($input);
+        // $this->assertTrue($result, $description);
     }
 }
