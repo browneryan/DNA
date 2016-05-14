@@ -1,0 +1,36 @@
+<?php
+class DNATest extends DrupalUnitTestCase
+{
+    public static function getInfo()
+    {
+        return array(
+        'name' => 'DNA Test unit tests',
+        'description' => 'Test that dna_validation works properly.',
+        'group' => 'Custom Modules Tests',
+        );
+    }
+
+    function testValidation()
+    {
+        $description = 'Letters other than a, c, g, or t should return FALSE.';
+
+        //Arrange
+        $input = 'z';
+
+        //Act
+        $result = dna_validation($input);
+
+        //Assert
+        $this->assertFalse($result, $description);
+
+        $description = 'A NULL value should return FALSE.';
+        $input = NULL;
+        $result = dna_validation($input);
+        $this->assertFalse($result, $description);
+
+        $description = 'Letters a, c, g, or t should return TRUE.';
+        $input = 'a';
+        $result = dna_validation($input);
+        $this->assertTrue($result, $description);
+    }
+}

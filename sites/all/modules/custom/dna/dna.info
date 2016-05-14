@@ -1,0 +1,7 @@
+name = DNA
+description = DNA generator.
+package = Custom Modules
+core = 7.x
+files[] = dna.module
+dependencies[] = simpletest
+files[] = dna.test
