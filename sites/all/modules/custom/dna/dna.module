@@ -1,0 +1,61 @@
+<?php
+function dna_menu() {
+    $items['dna'] = array(
+        'title' => 'DNA generator',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('dna_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['dna_results_page'] = array(
+        'title' => 'Results',
+        'page callback' => 'dna_results',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function dna_form() {
+    $form['input'] = array(
+        '#title' => 'Enter in a DNA sequence and generate its helix counterpart.',
+        '#type' => 'textfield',
+        '#description' => t("Please enter a string of letters in any order, however they must only be the letters 'a', 'c', 'g' or 't'."),
+        '#required' => TRUE,
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Generate DNA',
+    );
+    return $form;
+}
+
+function dna_form_submit($form, &$form_state) {
+
+    $input = $form_state['values']['input'];
+
+    $upper_input = strtoupper($input);
+    $split_input = str_split($upper_input);
+
+    // $dna_letters = array('A', 'C', 'G', 'T');
+
+    $result = '';
+
+    foreach($split_input as $letter) {
+        if($letter === 'A') {
+            $result .= 'T';
+        } elseif ($letter === 'T') {
+            $result .= 'A';
+        } elseif ($letter === 'G') {
+            $result .= 'C';
+        } else {
+            $result .= 'G';
+        }
+        $_SESSION['result'] = $result;
+        $form_state['redirect'] = 'dna_results_page';
+    }
+}
+
+function dna_results() {
+    return (string) $_SESSION['result'];
+}
