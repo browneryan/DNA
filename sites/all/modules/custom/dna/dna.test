@@ -1,10 +1,9 @@
 <?php
-class DNATestCase extends DrupalUnitTestCase
-{
-    public static function getInfo()
-    {
+class DNATestCase extends DrupalUnitTestCase {
+
+    public static function getInfo() {
         return array(
-        'name' => 'DNA Test unit tests',
+        'name' => 'DNA Test Unit Tests',
         'description' => 'Test that dna module works properly.',
         'group' => 'Custom Modules Tests',
         );
@@ -21,17 +20,30 @@ class DNATestCase extends DrupalUnitTestCase
         $result = dna_generate($input);
 
         //Assert
-        $expected_output = 'T';
+        $expected_output = 'Helix 1: A<br/>Helix 2: T';
         $this->assertEqual($result, $expected_output, $description);
+    }
+}
 
-        $description = 'Letters other than a, c, g and t will return an error.';
-        $input = 'z';
-        $result = element_validate_letter($input);
-        $this->assertFalse($result, $description);
+class DNATests extends DrupalWebTestCase {
 
-        // $description = 'Letters a, c, g, or t should return TRUE.';
-        // $input = 'a';
-        // $result = element_validate_letter($input);
-        // $this->assertTrue($result, $description);
+    public static function getInfo() {
+        return array(
+            'name' => 'DNA Test Functional Tests',
+            'description' => 'Tests that correct matching DNA will print on results page.',
+            'group' => 'Custom Modules Tests',
+        );
+    }
+
+    public function setUp() {
+        parent::setUp(array('dna'));
+    }
+
+    public function testDNAFunctionality() {
+        $edit = array();
+        $edit['input'] = 'ACGT';
+
+        $this->drupalPost('/dna', $edit, t('Generate DNA'));
+        $this->assertText(t('TGCA'), t('Success!'));
     }
 }

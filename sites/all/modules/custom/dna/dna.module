@@ -68,7 +68,7 @@ function dna_generate($input) {
         } else {
             $result .= 'G';
         }
-    }   $final .= 'Helix 1: ' . $upper_input . ' <br/>Helix 2: ' . $result;
+    }   $final .= 'Helix 1: ' . $upper_input . '<br/>Helix 2: ' . $result;
         return $final;
 }
 
